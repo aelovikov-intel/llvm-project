@@ -93,4 +93,14 @@ def LoweringPrepare : Pass<"cir-lowering-prepare"> {
   let dependentDialects = ["cir::CIRDialect"];
 }
 
+def CFGFallThroughWarnings: Pass<"cir-fallthrough-warnings"> {
+  let summary = "This pass replicates "
+    "other dialects";
+  let description = [{
+    This pass does preparation work for lowering to other dialects. For example,
+    it may expand the global variable initialziation in a more ABI-friendly form.
+  }];
+  let constructor = "mlir::createFallThroughWarningPass()";
+  let dependentDialects = ["cir::CIRDialect"];
+}
 #endif // CLANG_CIR_DIALECT_PASSES_TD

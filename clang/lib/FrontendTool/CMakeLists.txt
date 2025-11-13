@@ -22,6 +22,7 @@ if(CLANG_ENABLE_CIR)
   list(APPEND link_libs
     clangCIRFrontendAction
     MLIRCIRTransforms
+    MLIRCIRAnalysis
     MLIRIR
     MLIRPass
     )
