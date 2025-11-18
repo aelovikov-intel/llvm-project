@@ -314,9 +314,6 @@ public:
   }
 
   void createMatchingAuth(const MCInst &AuthAndRet, MCInst &Auth) override {
-    assert(isPAuthAndRet(AuthAndRet) &&
-           "Not a fused pauth-and-return instruction");
-
     Auth.clear();
     switch (AuthAndRet.getOpcode()) {
     case AArch64::RETAA:
@@ -324,18 +321,6 @@ public:
       break;
     case AArch64::RETAB:
       Auth.setOpcode(AArch64::AUTIBSP);
-      break;
-    case AArch64::RETAASPPCi:
-      Auth.setOpcode(AArch64::AUTIASPPCi);
-      break;
-    case AArch64::RETABSPPCi:
-      Auth.setOpcode(AArch64::AUTIBSPPCi);
-      break;
-    case AArch64::RETAASPPCr:
-      Auth.setOpcode(AArch64::AUTIASPPCr);
-      break;
-    case AArch64::RETABSPPCr:
-      Auth.setOpcode(AArch64::AUTIBSPPCr);
       break;
     default:
       llvm_unreachable("Unhandled fused pauth-and-return instruction");
