@@ -323,7 +323,8 @@ public:
       Auth.setOpcode(AArch64::AUTIBSP);
       break;
     default:
-      llvm_unreachable("Unhandled fused pauth-and-return instruction");
+      // isPAuthAndRet could select the Armv9.5-A variants.
+      createFatalBOLTError("Unhandled fused pauth-and-return instruction");
     }
   }
 
