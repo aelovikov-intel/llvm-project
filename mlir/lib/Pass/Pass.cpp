@@ -559,7 +559,7 @@ LogicalResult OpToOpPassAdaptor::run(Pass *pass, Operation *op,
     return op->emitOpError() << "trying to schedule a pass on an operation not "
                                 "marked as 'IsolatedFromAbove'";
   }
-  if (!pass->canScheduleOn(*op->getName().getRegisteredInfo())) {
+  if (!pass->canScheduleOn(op)) {
     return op->emitOpError()
            << "trying to schedule a pass on an unsupported operation";
   }
