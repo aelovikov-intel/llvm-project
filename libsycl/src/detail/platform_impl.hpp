@@ -14,7 +14,6 @@
 #include <sycl/__impl/platform.hpp>
 
 #include <detail/common.hpp>
-#include <detail/offload/info_code.hpp>
 #include <detail/offload/offload_utils.hpp>
 
 #include <OffloadAPI.h>
@@ -76,15 +75,22 @@ public:
   ///
   /// The return type depends on information being queried.
   template <typename Param> typename Param::return_type get_info() const {
+    using namespace info::platform;
+    using Map = info_ol_mapping<ol_platform_info_t>;
+
+    constexpr ol_platform_info_t olInfo =
+        map_info_desc<Param, ol_platform_info_t>(
+            Map::M<version>{OL_PLATFORM_INFO_VERSION},
+            Map::M<name>{OL_PLATFORM_INFO_NAME},
+            Map::M<vendor>{OL_PLATFORM_INFO_VENDOR_NAME});
     // for now we have only std::string properties
     static_assert(std::is_same_v<typename Param::return_type, std::string>);
     size_t ExpectedSize = 0;
-    call_and_throw(olGetPlatformInfoSize, MOffloadPlatform,
-                   detail::OffloadInfoCode<Param>::value, &ExpectedSize);
+    call_and_throw(olGetPlatformInfoSize, MOffloadPlatform, olInfo,
+                   &ExpectedSize);
     std::string Result;
     Result.resize(ExpectedSize - 1);
-    call_and_throw(olGetPlatformInfo, MOffloadPlatform,
-                   detail::OffloadInfoCode<Param>::value, ExpectedSize,
+    call_and_throw(olGetPlatformInfo, MOffloadPlatform, olInfo, ExpectedSize,
                    Result.data());
     return Result;
   }
